@@ -1,0 +1,20 @@
+{
+  "name": "eighteen_seventy_four",
+  "version": "0.1.0",
+  "bin": {
+    "eighteen_seventy_four": "bin/eighteen_seventy_four.js"
+  },
+  "scripts": {
+    "build": "echo \"The build step is not required when using JavaScript!\" && exit 0",
+    "cdk": "cdk",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@aws-cdk/assert": "1.68.0",
+    "aws-cdk": "1.68.0",
+    "jest": "^26.4.2"
+  },
+  "dependencies": {
+    "@aws-cdk/core": "1.68.0"
+  }
+}
