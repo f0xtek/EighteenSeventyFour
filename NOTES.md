@@ -4,26 +4,57 @@
 
 ### Crawler
 
-1. Scrape 1874 fixtures-results page HTML
-2. Parse HTML to return results table
+* Scrape 1874 fixtures-results page HTML
+* Parse HTML to return results table
     a. each result/fixture is a table row with class 'sp-row'
-3. Convert relevant fixtures/results rows into JSON objects
-4. Store JSON objects in DynamoDB
+* Convert relevant fixtures/results rows into JSON objects
 
-### Result/Fixture Parser
+```
+{
+  data: {
+    results: [
+      {
+        date: '2020-10-13 15:00',
+        fixture: 'Barnoldswick Town vs 1874 Northwich',
+        stadium: 'Silentnight Stadium',
+        home: false,
+        result: '0 - 3',
+        recap: 'https://1874northwich.com/matches/barnoldswick-town-vs-1874-northwich-4/',
+      }
+    ],
+    fixtures: [
+      {
+        date: '2020-10-17 15:00',
+        fixture: '1874 Northwich vs Irlam',
+        stadium: 'Offside Trust Stadium',
+        home: true,
+        preview: 'https://1874northwich.com/matches/1874-northwich-vs-irlam-4/',
+      }
+    ]
+  }
+}
+```
 
-1. Invoked by new DynamoDB record
-2. Get latest result & next fixture from dynamodb data
-3. Create JS Object with data
-4. Put message on SQS queue
+* Store JSON objects in DynamoDB
+    * Separate table for results & fixtures?
+    * Record per match?
+    * Indexes?
+* Put message on a queue with tables updated
+
+### Result & Fixture Processor
+
+* Invoked by dynamodb table update
+* Get latest result & fixture from dynamodb data table
+* Create JS Object with data
+* Put message on SQS queue
 
 ### Notifier
 
-1. Invoked by new message on SQS queue
-2. Format data into SMS message
-3. Send message to Twilio API to be sent as SMS
-    a. if failed, return to SQS to be reprocessed up to n number of retries
-    b. if retries exhausted, log error & alert via CloudWatch Alerts
+* Invoked by a new message on SQS queue
+* Format data into SMS message
+* Send a message to Twilio API to be sent as SMS
+    * if failed, return to SQS to be reprocessed up to n number of retries
+    * if retries exhausted, log error & alert via CloudWatch Alerts
 
 ## Infrastructure
 
